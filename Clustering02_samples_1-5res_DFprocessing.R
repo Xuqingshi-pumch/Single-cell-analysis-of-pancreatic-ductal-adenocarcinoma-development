@@ -1,37 +1,3 @@
-## 02Clustering ####
-##Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426.R
-#!/bin/bash
-#SBATCH -J  Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426
-#SBATCH -D /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3 
-#SBATCH -p compute
-#SBATCH --output=/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426.out         
-#SBATCH --error=/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426.err                  
-#SBATCH --nodes=1                          
-#SBATCH --ntasks-per-node=56 
-#SBATCH --mem=500000    
-#SBATCH --nodelist=n01
-
-
-#**** 这个在MyeloidAnalysis05_CN1UMCN2_annoting_filting3_resfinding 文件后面
-
-# /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout
-# /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/sc_scriptfiles
-# /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/Results
-
-
-# ###mkdir /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426/
-
-# module load anaconda_global/anaconda_22
-# source activate /share/home/sigrid/biosoft_sigrid/anaconda3/envs/R4
-# R CMD BATCH --no-restore /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/sc_scriptfiles/02Clustering/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426.R  /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426.Rout
-# conda deactivate
-# module unload anaconda_global/anaconda_22 
-
-# Error in paste0(filesDir, "Results/02Clustering/Figures/CN1_23_MReRNA/",  : 
-#   argument is missing, with no default
-# Calls: res_persample -> dir.exists -> paste0
-# Execution halted
-
 #### prepare core&environment ####
 rm(list=ls())
 sink("/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426/Clustering02_CN1-23samples_PSCT_20pc_1-5res_DFprocessing_230426.txt", append=TRUE, split=TRUE )
@@ -41,13 +7,6 @@ plan("multicore", workers = 55)
 options(future.globals.maxSize= 9000000*1024^2)
 future.seed = NULL
 nbrOfWorkers()
-
-
-#### 9 samples ####
-
-# save(CN1_23_SCT1_1, file = paste0(filesDir, "Results/02Clustering/SaveData/CN1_23_SCT1_1.RData"))
-# save(CN1_23_SCT1_3, file = paste0(filesDir, "Results/02Clustering/SaveData/CN1_23_SCT1_3.RData"))
-# save(CN1_23_SCT1_3, file = paste0(filesDir, "Results/02Clustering/SaveData/CN1_23_SCT1_3.RData"))
 
 #### prepare library ####
 	suppressPackageStartupMessages(library(Seurat))
@@ -141,27 +100,6 @@ nbrOfWorkers()
 	            return(sc_persampledata) 
 	        }
 
-
-# npc_num <- 40
-# set_resolutions <- seq(0.1, 1, by = 0.1)
-# res_num <- 0.5
-# CN1_23filter_PSCT_40pc <- lapply(namelist, function(samplename){
-# 	print(samplename)
-# 	sc_persampledata <- CN1_23filter_SCT[[samplename]]
-# 	sc_persampledata <- pca_persample(sc_persampledata = sc_persampledata, samplename = samplename, method = "SCT", npc_num = npc_num)
-# 	sc_persampledata <- findclusters_persample(sc_persampledata = sc_persampledata, samplename = samplename, method = "SCT", npc_num = npc_num, res_num = 0.5)
-
-# 	})
-
-# names(CN1_23filter_PSCT_40pc) <- namelist
-# names(CN1_23filter_PSCT_40pc)
-# CN1_23filter_PSCT_40pc
-
-
-
-
-
-####doubletFinder_v3
 
 #### total_structure  ####
     namelist <- names(CN1_23filter_SCT)
@@ -374,4 +312,5 @@ nbrOfWorkers()
 
 
 	rm(list = ls())
+
 
