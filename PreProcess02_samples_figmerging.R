@@ -26,8 +26,6 @@ setwd(filesDir)
 getwd()
 
 #### prepare folderdirectory ####
-
-
     if(!dir.exists(paste0(filesDir, "Results/01PreProcess/SaveData/"))){dir.create(paste0(filesDir, "Results/01PreProcess/SaveData/"), recursive = TRUE)}
     if(!dir.exists(paste0(filesDir, "Results/01PreProcess/Figures/"))){dir.create(paste0(filesDir, "Results/01PreProcess/Figures/"), recursive = TRUE)}
     if(!dir.exists(paste0(filesDir, "Results/01PreProcess/Tables/"))){dir.create(paste0(filesDir, "Results/01PreProcess/Tables/"), recursive = TRUE)}
@@ -222,6 +220,7 @@ getwd()
 print("finish total ")
 
 rm(list = ls())
+
 
 
 
