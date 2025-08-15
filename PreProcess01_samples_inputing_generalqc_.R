@@ -1,52 +1,11 @@
-### 01PreProcess ####
-##PreProcess01_CN1-23samples_inputing_generalqc_230426.R
-#!/bin/bash
-#SBATCH -J  PreProcess01_CN1-23samples_inputing_generalqc_230426
-#SBATCH -D /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3 
-#SBATCH -p compute
-#SBATCH --output=/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/01PreProcess/PreProcess01_CN1-23samples_inputing_generalqc_230426/PreProcess01_CN1-23samples_inputing_generalqc_230426.out         
-#SBATCH --error=/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/01PreProcess/PreProcess01_CN1-23samples_inputing_generalqc_230426/PreProcess01_CN1-23samples_inputing_generalqc_230426.err                  
-#SBATCH --nodes=1                          
-#SBATCH --ntasks-per-node=56 
-#SBATCH --mem=500000    
-#SBATCH --nodelist=n01
-
-
-#**** 这个在MyeloidAnalysis05_CN1UMCN2_annoting_filting3_resfinding 文件后面
-
-# /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout
-# /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/sc_scriptfiles
-# /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/Results
-
-
-# ###mkdir /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/01PreProcess/PreProcess01_CN1-23samples_inputing_generalqc_230426/
-
-# module load anaconda_global/anaconda_22
-# source activate /share/home/sigrid/biosoft_sigrid/anaconda3/envs/R4
-# R CMD BATCH --no-restore /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/sc_scriptfiles/01PreProcess/PreProcess01_CN1-23samples_inputing_generalqc_230426.R  /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/01PreProcess/PreProcess01_CN1-23samples_inputing_generalqc_230426/PreProcess01_CN1-23samples_inputing_generalqc_230426.Rout
-# conda deactivate
-# module unload anaconda_global/anaconda_22 
-
-# Error in paste0(filesDir, "Results/01PreProcess/Figures/CN1_23UM_MReRNA/",  : 
-#   argument is missing, with no default
-# Calls: res_persample -> dir.exists -> paste0
-# Execution halted
-
 #### prepare core&environment ####
 rm(list=ls())
-sink("/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/01PreProcess/PreProcess01_CN1-23samples_inputing_generalqc_230426/PreProcess01_CN1-23samples_inputing_generalqc_230426.txt", append=TRUE, split=TRUE )
-pdf("/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/01PreProcess/PreProcess01_CN1-23samples_inputing_generalqc_230426/PreProcess01_CN1-23samples_inputing_generalqc_230426.pdf") #
 library(future)
 plan("multicore", workers = 55) 
 options(future.globals.maxSize= 9000*1024^2)
 future.seed = NULL
 nbrOfWorkers()
 
-
-
-# save(CN1_23UM_SCT1_1, file = paste0(filesDir, "Results/01PreProcess/SaveData/CN1_23UM_SCT1_1.RData"))
-# save(CN1_23UM_SCT1_3, file = paste0(filesDir, "Results/01PreProcess/SaveData/CN1_23UM_SCT1_3.RData"))
-# save(CN1_23UM_SCT1_3, file = paste0(filesDir, "Results/01PreProcess/SaveData/CN1_23UM_SCT1_3.RData"))
 
 #### prepare library ####
 suppressPackageStartupMessages(library(Seurat))
@@ -60,22 +19,11 @@ suppressPackageStartupMessages(library(stringr))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(Matrix))
 suppressPackageStartupMessages(library(patchwork))
-#    suppressPackageStartupMessages(library(sctransform))
-#    library(viridis)
-# library(maps)
-# library(fields)
-# library(spam)
-#    suppressPackageStartupMessages(library(DoubletFinder))
 suppressPackageStartupMessages(library(harmony))
-#suppressPackageStartupMessages(library(clusterProfiler))
-#suppressPackageStartupMessages(library(org.Hs.eg.db))
 options(stringsAsFactors = F)
 filesDir<-'/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/'
 setwd(filesDir)
 getwd()
-
-
-
 
 #### prepare folderdirectory ####
 	if(!dir.exists(paste0(filesDir, "Results/01PreProcess/SaveData/"))){dir.create(paste0(filesDir, "Results/01PreProcess/SaveData/"), recursive = TRUE)}
@@ -231,6 +179,7 @@ getwd()
     colnames(CN1_23_filter_order[[1]]@meta.data)  
 
     saveRDS(CN1_23_filter_order, paste0(filesDir, "Results/01PreProcess/SaveData/CN1_23_filter_order_230426.rds"))
+
 
 
 
