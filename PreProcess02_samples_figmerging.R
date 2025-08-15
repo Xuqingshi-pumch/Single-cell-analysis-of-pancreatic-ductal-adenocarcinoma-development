@@ -25,9 +25,6 @@ filesDir<-'/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN1
 setwd(filesDir)
 getwd()
 
-
-
-
 #### prepare folderdirectory ####
 
 
@@ -225,6 +222,7 @@ getwd()
 print("finish total ")
 
 rm(list = ls())
+
 
 
 
