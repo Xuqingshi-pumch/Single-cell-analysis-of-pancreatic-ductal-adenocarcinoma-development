@@ -1,52 +1,11 @@
-## 02Clustering ####
-##Clustering01_CN1-23samples_PSCTing_npcfinding_230426.R
-#!/bin/bash
-#SBATCH -J  Clustering01_CN1-23samples_PSCTing_npcfinding_230426
-#SBATCH -D /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3 
-#SBATCH -p compute
-#SBATCH --output=/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering01_CN1-23samples_PSCTing_npcfinding_230426/Clustering01_CN1-23samples_PSCTing_npcfinding_230426.out         
-#SBATCH --error=/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering01_CN1-23samples_PSCTing_npcfinding_230426/Clustering01_CN1-23samples_PSCTing_npcfinding_230426.err                  
-#SBATCH --nodes=1                          
-#SBATCH --ntasks-per-node=56 
-#SBATCH --mem=500000    
-#SBATCH --nodelist=n02
-
-
-#**** 这个在MyeloidAnalysis05_CN1UMCN2_annoting_filting3_resfinding 文件后面
-
-# /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout
-# /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/sc_scriptfiles
-# /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/Results
-
-
-# ###mkdir /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering01_CN1-23samples_PSCTing_npcfinding_230426/
-
-# module load anaconda_global/anaconda_22
-# source activate /share/home/sigrid/biosoft_sigrid/anaconda3/envs/R4
-# R CMD BATCH --no-restore /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/sc_scriptfiles/02Clustering/Clustering01_CN1-23samples_PSCTing_npcfinding_230426.R  /share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering01_CN1-23samples_PSCTing_npcfinding_230426/Clustering01_CN1-23samples_PSCTing_npcfinding_230426.Rout
-# conda deactivate
-# module unload anaconda_global/anaconda_22 
-
-# Error in paste0(filesDir, "Results/02Clustering/Figures/CN1_23_MReRNA/",  : 
-#   argument is missing, with no default
-# Calls: res_persample -> dir.exists -> paste0
-# Execution halted
-
 #### prepare core&environment ####
 rm(list=ls())
-sink("/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering01_CN1-23samples_PSCTing_npcfinding_230426/Clustering01_CN1-23samples_PSCTing_npcfinding_230426.txt", append=TRUE, split=TRUE )
-pdf("/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/02Clustering/Clustering01_CN1-23samples_PSCTing_npcfinding_230426/Clustering01_CN1-23samples_PSCTing_npcfinding_230426.pdf") #
 library(future)
 plan("multicore", workers = 55) 
 options(future.globals.maxSize= 9000000*1024^2)
 future.seed = NULL
 nbrOfWorkers()
 
-
-
-# save(CN1_23_SCT1_1, file = paste0(filesDir, "Results/02Clustering/SaveData/CN1_23_SCT1_1.RData"))
-# save(CN1_23_SCT1_3, file = paste0(filesDir, "Results/02Clustering/SaveData/CN1_23_SCT1_3.RData"))
-# save(CN1_23_SCT1_3, file = paste0(filesDir, "Results/02Clustering/SaveData/CN1_23_SCT1_3.RData"))
 
 #### prepare library ####
 suppressPackageStartupMessages(library(Seurat))
@@ -61,14 +20,7 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(Matrix))
 suppressPackageStartupMessages(library(patchwork))
 suppressPackageStartupMessages(library(sctransform))
-#    library(viridis)
-# library(maps)
-# library(fields)
-# library(spam)
-#    suppressPackageStartupMessages(library(DoubletFinder))
 suppressPackageStartupMessages(library(harmony))
-#suppressPackageStartupMessages(library(clusterProfiler))
-#suppressPackageStartupMessages(library(org.Hs.eg.db))
 options(stringsAsFactors = F)
 filesDir<-'/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/'
 setwd(filesDir)
@@ -82,14 +34,7 @@ getwd()
         CN1_23_filter <- readRDS(paste0(filesDir, "Results/01PreProcess/SaveData/CN1_23_filter_order_230426.rds"))
     # load(paste0(filesDir, "Results/02Clustering/SaveData/CN1_23_filter.RData"))
 
-#### SCTranform tips ####
-    #Before we run this for loop, we know that the output can generate large R objects/variables in terms of memory. If we have a large dataset, then we might need to adjust the limit for allowable object sizes within R (Default is 500 * 1024 ^ 2 = 500 Mb) using the following code:
-    #options(future.globals.maxSize = 4000 * 1024^2)
-    # SCTncells <- ncol(sc_filter_sampledata)
-    # sc_SCT_sampledata <- SCTransform(sc_filter_sampledata, ncells = SCTncells, vars.to.regress = c("nCount_RNA", "percent.mt"), verbose = FALSE)
-
 #### SCTranform for each sample ####
-
     namelist <- names(CN1_23_filter)
     print(namelist)
     CN1_23filter_SCT = lapply(namelist,function(samplename){
@@ -160,11 +105,7 @@ getwd()
 
     head(sceList1_SCT[[1]])
     npc_list <- c(50,100)
-    # npc_num = 100
     if(!dir.exists(paste0(filesDir, "Results/02Clustering/Figures/PSCT_npcfind/"))){dir.create(paste0(filesDir, "Results/02Clustering/Figures/PSCT_npcfind/"), recursive = TRUE)}
-
-# Error in paste0(paste0filesDir, "Results/02Clustering/Figures/PSCT_npcfind/",  : 
-#   object 'paste0filesDir' not found
 
 for (npc_num in npc_list) {
     if(!is.null(dev.list())){dev.off()}
@@ -181,5 +122,6 @@ for (npc_num in npc_list) {
 }
 
     rm(list=ls())
+
 
 
