@@ -1,18 +1,11 @@
 #### prepare core&environment ####
 rm(list=ls())
-# sink("/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/06TCellAnalysis/06TCellAnalysis12-9_CN11UMCN2_resfind3_score_CD4T_240527_inwin/06TCellAnalysis12-9_CN11UMCN2_resfind3_score_CD4T_240527_inwin.txt", append=TRUE, split=TRUE )
-# pdf("/share/home/sigrid/IPMN_PROGRAM/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/bashout/06TCellAnalysis/06TCellAnalysis12-9_CN11UMCN2_resfind3_score_CD4T_240527_inwin/06TCellAnalysis12-9_CN11UMCN2_resfind3_score_CD4T_240527_inwin.pdf") #
 library(future)
 plan("multicore", workers = 55) 
 options(future.globals.maxSize= 900000*1024^2)
 future.seed = NULL
 nbrOfWorkers()
 
-# save(sceList2UM_SCT1_1, file = paste0(filesDir, "Results/06TCellAnalysis/SaveData/sceList2UM_SCT1_1.RData"))
-# save(sceList2UM_SCT1_3, file = paste0(filesDir, "Results/06TCellAnalysis/SaveData/sceList2UM_SCT1_3.RData"))
-# save(sceList2UM_SCT1_3, file = paste0(filesDir, "Results/06TCellAnalysis/SaveData/sceList2UM_SCT1_3.RData"))
-
-#### prepare library ####
 #### prepare library ####
 suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(future))
@@ -27,13 +20,7 @@ suppressPackageStartupMessages(library(Matrix))
 suppressPackageStartupMessages(library(patchwork))
 library(ggalluvial)
 library(RColorBrewer)
-#    suppressPackageStartupMessages(library(sctransform))
-#    library(viridis)
-# library(maps)
-# library(fields)
-# library(spam)
-#    suppressPackageStartupMessages(library(DoubletFinder))
-# suppressPackageStartupMessages(library(harmony))
+
 options(stringsAsFactors = F)
 filesDir<-'I:/IPMN_PROGRAM_LINUX/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/'
 setwd(filesDir)
@@ -43,7 +30,7 @@ method = "RNA"
 npc_num <- 20
 set_resolutions = seq(0.1, 1.5, by = 0.1)
 method = "RNA"
-harmony_varuse <- c("PatientID","datasets")
+
 reduction <- "umap"
 
 identlevel <- "resfind_3"
@@ -51,7 +38,7 @@ samplename <- "CD4T"
 method = "RNA"
 
 
-filtercelldata <- readRDS(paste0("I:/IPMN_PROGRAM_LINUX/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/06TCellAnalysis/SaveData/CD4T/resfind_3/resfind_3_CD4T_resfind3_ann1_IPMClineage_20samples_240527.rds"))
+filtercelldata <- readRDS(paste0("CD4T_20samples.rds"))
 colnames(filtercelldata@meta.data)
 table(filtercelldata$SubCellType1_CN11UMCN2)
 
@@ -69,11 +56,8 @@ TableDir <- paste0(filesDir, "06TCellAnalysis/Tables/", samplename,"/",identleve
 DataDir <- paste0(filesDir, "06TCellAnalysis/SaveData/", samplename,"/",identlevel,"/")
 
 
-# Th1 = c("IL2", )
 if(!dir.exists(paste0(FigDir))){dir.create(paste0(FigDir), recursive = TRUE)}
-#if(!dir.exists(paste0(filesDir, "06TCellAnalysis/Figures/"))){dir.create(paste0(filesDir, "06TCellAnalysis/Figures/"), recursive = TRUE)}
 if(!dir.exists(paste0(TableDir))){dir.create(paste0(TableDir), recursive = TRUE)}
-#if(!dir.exists(paste0(filesDir, "06TCellAnalysis/SaveData/"))){dir.create(paste0(filesDir, "06TCellAnalysis/SaveData/"), recursive = TRUE)}
 if(!dir.exists(paste0(DataDir))){dir.create(paste0(DataDir), recursive = TRUE)}
 
 mycolor = c("CD4T_CCR7_SELL" = "#99749f", #深紫色
@@ -88,26 +72,14 @@ mycolor = c("CD4T_CCR7_SELL" = "#99749f", #深紫色
 )
 
 #### score ####
-
-
-#            scorelist1 =list(
-#             #### gut is for CD8 ####
-#     exhaustion_score_gut = c("HAVCR2", "LAG3","ENTPD1"),
-
-#     cytotoxic_score_gut = c("PRF1","IFNG","GNLY","NKG7","GZMB","GZMA","GZMH","KLRK1","KLRB1","KLRD1","CTSW","CST7"),
-
-#     inflammatory_score_gut = c("IRF1","CD8A","CCL2","CCL3","CCL4","CXCL9","CXCL10","ICOS","GZMK"),
-
-#     effector_score_gut = c("GZMA","GZMB","PRF1","EOMES","IFNG","TNF","CXCL9","CXCL10","CD8A","CD4","FOXP3","ICOS","CTLA4"),
-
-#     naive_score_science = c("CCR7", "TCF7", "LEF1", "SELL", "MAL"),
-
-#     exhuastion_TF_science = c("SOX4", "FOXP3", "TOX", "TOX2", "RBPJ", " ZBED2", "PRDM1", "IKZF4", "BATF", "STAT3", "IFI16")
-
-# )  
-
-
-
+ scorelist1 =list(
+ exhaustion_score_gut = c("HAVCR2", "LAG3","ENTPD1"),
+  cytotoxic_score_gut = c("PRF1","IFNG","GNLY","NKG7","GZMB","GZMA","GZMH","KLRK1","KLRB1","KLRD1","CTSW","CST7"),
+  inflammatory_score_gut = c("IRF1","CD8A","CCL2","CCL3","CCL4","CXCL9","CXCL10","ICOS","GZMK"),
+ effector_score_gut = c("GZMA","GZMB","PRF1","EOMES","IFNG","TNF","CXCL9","CXCL10","CD8A","CD4","FOXP3","ICOS","CTLA4"),
+ naive_score_science = c("CCR7", "TCF7", "LEF1", "SELL", "MAL"),
+exhuastion_TF_science = c("SOX4", "FOXP3", "TOX", "TOX2", "RBPJ", " ZBED2", "PRDM1", "IKZF4", "BATF", "STAT3", "IFI16")
+)  
 
 
 # "naive_score_science")] <- "naive"
@@ -116,51 +88,6 @@ mycolor = c("CD4T_CCR7_SELL" = "#99749f", #深紫色
 # "exhaustion_score_gut")] <- "exhuastion"
 # "exhuastion_TF_science")] <- "exhuastion_TF"
 
-
-
-#### score ####
-scorelist =list(naive_score_gut = c("CCR7", "TCF7", "LEF1", "SELL"),
-                #### gut is for CD8 ####
-                exhaustion_score_gut = c("HAVCR2", "CXCL13", "CCL3", "SIRPG", "IFNG", "TIGIT", "GZMB", "PDCD1", "PARK7", "TNFRSF9", "ACP5", "CTLA4", "RBPJ", 
-                                         "MIR155", "CXCR6", "CD27", "FKBP1A", "BST2", "TPI1", "MIR155HG", "PTTG1", "CD63", "SAMSN1", "RGS1", "CD27-AS1", 
-                                         "ITGAE", "MIR4632", "HLA-DRA", "IGFLR1", "KRT86", "ENTPD1", "DUSP4", "SIT1", "TOX", "PHLDA1",
-                                         "CCND2", "GPR25", "LAYN", "PRDX5", "SARDH", "FASLG", "MIR3917", "ANXA5", "CTSD", "PDIA6", "RANBP1", 
-                                         "FKBP1A-SDCBP2", "COTL1", "TNFRSF1B", "IDH2", "CD38", "CD82", "LAG3", "MIR497HG", "APOBEC3C", "ITM2A", 
-                                         "COX5A", "IFI35", "NDFIP2", "TNFRSF18", "KRT81", "DNPH1", "RGS2", "HMGN1", "DYNLL1", "SNRPB", "STRA13", 
-                                         "SYNGR2", "RAB27A", "PSMC3", "GALM", "FABP5", "UBE2L6", "MYO7A", "PRDX3", "DDIT4", "STMN1", "CDK2AP2", 
-                                         "VCAM1", "SNAP47", "PSMB3", "ISG15", "HLA-DRB5", "CKS2", "TNIP3", "CD7", "PSMD4", "ATP6V1C2", "PSMD8", "HLA-DRB6"),
-                
-                cytotoxic_score_gut = c("PRF1","IFNG","GNLY","NKG7","GZMB","GZMA","GZMH","KLRK1","KLRB1","KLRD1","CTSW","CST7"),
-                
-                #inflammatory_score_gut = c("IRF1","CD8A","CCL2","CCL3","CCL4","CXCL9","CXCL10","ICOS","GZMK","HLA-DMA","HLA-DMB","HLA-DOA","HLA-DOB"),
-                
-                effector_score_gut = c("GZMA","GZMB","PRF1","EOMES","IFNG","TNF","CXCL9","CXCL10","CD8A","CD4","FOXP3","ICOS","CTLA4"),
-                
-                #regulatory_score_gut = c("TNFRSF9","FOXP3","CTLA4","CCR8","ADORA2A","REL","TGFB1","HELIOS"),
-                
-                naive_score_science = c("CCR7", "TCF7", "LEF1", "SELL", "MAL"),
-                
-                exhuastion_TF_science = c("SOX4", "FOXP3", "TOX", "TOX2", "RBPJ", " ZBED2", "PRDM1", "IKZF4", "BATF", "STAT3", "IFI16"),
-                effectormolecules_science = c("CST7", "GZMK", "GZMA", "NKG7", "IFNG", "PRF1", "GZMB", "GNLY"),
-                #terminal_exhuastion_science = c("ENTPD1"),
-                exhaustion_markers_science  = c("PDCD1", "TOX", "CXCL13", "TIGIT", "CTLA4", "TNFRSF9", "HAVCR2", "LAG3"),
-                Tnaive_marker = c("CCR7", "TCF7", "LEF1", "SELL", "KLF2", "CD69", "TXNIP"),
-                
-                
-                Tcytotoxic_score_integration = c("PRF1" , "GZMK", "GNLY", 
-                                                 "GZMA", "GZMB" , "GZMH" ,"GZMM" , "NKG7", 
-                                                 "IFNG" , "LAMP1",
-                                                 "KLRG1", "PRDM1", "TBX21", "ID2", 
-                                                 "GZMF", "GZMC","CST7",
-                                                 "TNFSF10","KLRK1","KLRB1","KLRD1","CTSW"),
-                Texhuastion_score_integration = c("CTLA4", "HAVCR2", "LAG3", "PDCD1", "TIGIT", "SHD", "CLEC4C", 
-                                                  "LILRA4", "PTCRA", "LRRC26", "TNFRSF9","ENTPD1","CXCL13"),
-                
-                Tnaive_score = c("CCR7" , "TCF7" , "LEF1" , "SELL" , "KLF2", "CD69", "TXNIP"),
-                # transitory_exhuastion_integration = c("GZMK"),
-                Th = c("TBX21","GATA3","IL17A")
-                
-)     
 
 table(filtercelldata$SubCellTypeup_CN11UMCN2)
 table(filtercelldata$SubCellType1_CN11UMCN2)
@@ -214,102 +141,6 @@ for (genesetname in scoregenenamelist) {
     name = genesetname
   )
 }
-#### metadata export ####
-metadata  <-  filtercelldata@meta.data 
-colnames(metadata) 
-saveRDS(metadata,paste0(DataDir,samplename,"_score_metadata_240527.rds"))
-
-
-for (genesetname in scoregenenamelist) {
-  if(!dir.exists(paste0(FigDir,"score_240527/"))){dir.create(paste0(FigDir,"score_240527/"), recursive = TRUE)}
-  print(colnames(filtercelldata@meta.data))
-  length(colnames(filtercelldata@meta.data))
-  Idents(filtercelldata) <- paste0("SubCellType1_CN11UMCN2") 
-  locatedir <- paste0(FigDir,"score_240527/")
-  if(!is.null(dev.list())){dev.off()}
-  pdf(file = paste0(locatedir, samplename,"_",genesetname,"_totalscore-1.pdf"), width = 12, height = 8)
-  plot <- VlnPlot(filtercelldata, features = paste0(genesetname,"1"), group.by = "SubCellType0_CN11UMCN2") +
-    themefamily+ NoLegend() +
-    labs(title = genesetname) 
-  print(plot)
-  plot <- VlnPlot(filtercelldata, features = paste0(genesetname,"1"), group.by = "SampleStage2") +
-    themefamily+ NoLegend() +
-    labs(title = genesetname) 
-  print(plot)
-  plot <- VlnPlot(filtercelldata, features = paste0(genesetname,"1")) +
-    themefamily+ NoLegend() +
-    labs(title = genesetname) 
-  print(plot)
-  dev.off()
-  
-  if(!is.null(dev.list())){dev.off()}
-  pdf(file = paste0(locatedir, samplename,"_",genesetname,"_totalscore-2.pdf"), width = 12, height = 8)
-  genesublistVlnplot<-VlnPlot(filtercelldata, 
-                              features =  paste0(genesetname,"1"), 
-                              group.by = "SubCellType1_CN11UMCN2", 
-                              pt.size = 0.1, raster=FALSE
-  ) + 
-    geom_boxplot(width=.2,col="black",fill="white") + NoLegend() +
-    labs(title = genesetname) +themefamily+
-    theme(plot.title = element_text(hjust = 0.5), 
-          plot.subtitle = element_text(hjust = 0.5),
-          axis.text.x=element_text(angle = 45,hjust = 1)) 
-  
-  print(genesublistVlnplot)
-  
-  genesublistVlnplot<-VlnPlot(filtercelldata, 
-                              features =  paste0(genesetname,"1"), 
-                              group.by = "SubCellType1_CN11UMCN2", 
-                              pt.size = 0.1, raster=FALSE
-  ) + 
-    geom_boxplot(width=.2,col="black",fill="white") + NoLegend() +
-    labs(title = genesetname) +themefamily+
-    theme(plot.title = element_text(hjust = 0.5), 
-          plot.subtitle = element_text(hjust = 0.5),
-          axis.text.x=element_text(angle = 45,hjust = 1)) 
-  
-  print(genesublistVlnplot)
-  
-  
-  
-  genesublistFeatureplot <- FeaturePlot(filtercelldata, features = paste0(genesetname,"1") , pt.size = 0.1, raster=FALSE)  +
-    coord_fixed(ratio=1/1) +themefamily+
-    theme(plot.subtitle = element_text(hjust = 0.5))  + labs(subtitle = paste0(samplename,"_",method, "_",  genesetname, "_genes"))                         
-  print(genesublistFeatureplot)
-  
-  dev.off()
-  if(!is.null(dev.list())){dev.off()}
-  mysubtitle <-  labs(subtitle = paste0(samplename))  #+ theme(plot.subtitle = element_text(hjust = 0.5))
-  pdf(file = paste0(locatedir,samplename, "_",  genesetname, "_1.pdf"), width = 20, height = 12)
-  total_dimplot <- DimPlot(object = filtercelldata, reduction = reduction, label = TRUE, group.by = "SubCellType1_CN11UMCN2", pt.size = 0.2, raster=FALSE) + 
-    coord_fixed(ratio=1/1) + mysubtitle + 
-    theme(plot.subtitle = element_text(hjust = 0.5)) + labs(title = NULL) +
-    theme(legend.title=element_blank(), legend.key.size = unit(40, "pt"), legend.text=element_text(size=20))
-  print(total_dimplot)
-  rm(total_dimplot)
-  if(length(genelistkegg_filt[[genesetname]]) > 1 ){
-    genesublistVlnplot<-VlnPlot(filtercelldata, features = genelistkegg_filt[[genesetname]] , group.by = "SubCellType1_CN11UMCN2", pt.size = 0.2, raster=FALSE,
-                                stack = TRUE, flip = T) + geom_boxplot(width=.2,col="black",fill="white")+ NoLegend() +
-      xlab(NULL) + mysubtitle + labs(title = paste0(genesetname, "_genes")) + 
-      theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) 
-    print(genesublistVlnplot)
-    rm(genesublistVlnplot)
-  }
-  dev.off()
-  
-  if(!is.null(dev.list())){dev.off()}
-  mysubtitle <-  labs(subtitle = paste0(samplename))  #+ theme(plot.subtitle = element_text(hjust = 0.5))
-  pdf(file = paste0(locatedir,samplename, "_",  genesetname, "_2.pdf"), width = 20, height = 12)
-  for (i in 1:length(genelistkegg_filt[[genesetname]])){
-    genesublistFeatureplot <- FeaturePlot(filtercelldata, features = genelistkegg_filt[[genesetname]][i] , pt.size = 0.2, raster=FALSE)  +
-      coord_fixed(ratio=1/1) +
-      theme(plot.subtitle = element_text(hjust = 0.5))  + labs(subtitle = paste0(samplename,"_", genesetname, "_genes"))                         
-    print(genesublistFeatureplot)
-    rm(genesublistFeatureplot)
-  }  
-  dev.off()
-  
-} 
 
 #### score vlnplot SubCellType1_CN11UMCN2 ####
 
@@ -325,8 +156,6 @@ colnames(medata)
 
 for (scorename in scorelevel) {
   
-  #scorename <- "immunosuppressive_CAF"
-  #scorename <- "normal_fibroblast_pancreas"
   p4 <- ggplot(data = medata, aes_string(x = "SubCellType1_CN11UMCN2", y = scorename)) +
     geom_point(position = 'jitter', color = 'grey',
                size = 0.5, alpha = 0.8) +
@@ -347,8 +176,7 @@ for (scorename in scorelevel) {
     ggtitle(paste(scorename," score")) +
     scale_fill_manual(values = mycolor) +
     scale_color_manual(values = mycolor)# + #+RotatedAxis() +
-  #theme_classic() + 
-  #coord_flip() 
+
   p4
   ggsave(paste0(FigDir,"score_240527/",scorename,"_vlnplot2.pdf"),width = 4, height = 2.5)
   ggsave(paste0(FigDir,"score_240527/",scorename,"_vlnplot2.tiff"),width = 4, height = 2.5)
@@ -381,12 +209,9 @@ sourcedata <- medatalong
 colnames(sourcedata)
 head(sourcedata)
 sourcedata <-  sourcedata %>%  select(cellbarcode, orig.ident, SampleStage2,CD4T_score_type,score )
-saveRDS(sourcedata, paste0(DataDir,"v1_fig1e_sourcedata.rds")) #### figs2b_d
-write.csv(sourcedata, paste0("I:/IPMN_PROGRAM_LINUX/analysis/sc_analysis/sc_analysis6_CN11UMCN2CN3/Results/V1-240423/Fibroblast/plot-V2-241106/sourcedata/v1_fig1e_sourcedata.csv"))
+saveRDS(sourcedata, paste0(DataDir,"v1_fig1e_s2b_d_sourcedata.rds")) #### figs2b_d
 
 #### score radater plot SampleStage2 ####
-
-
 themefamily <- theme(panel.grid = element_blank(),
                      axis.text.x = element_text(angle = 45, hjust = 1,  color = "#000000",size = 14),
                      #axis.text.x = element_text(angle = 90, hjust = 1, color = "#000000"),
@@ -482,8 +307,6 @@ for (scorelevelname in scorelevel) {
     #ggtitle(paste("CD4Ts")) +
     scale_fill_manual(values = mycolor) +
     scale_color_manual(values = mycolor) +# + #+RotatedAxis() +
-    #theme_classic() + 
-    #coord_flip()         #差异显著性检验：
     geom_signif(aes_string(x = "SampleStage2", y = scorename),
                 comparisons = comparelevel,
                 map_signif_level=F, # T显示显著性，F显示p值
@@ -502,8 +325,6 @@ for (scorelevelname in scorelevel) {
   plist[[scorelevelname]] <- p6
   ggsave(paste0(FigDir,"score_",scorelevelname,"_vlnplot_Samplestage2_sig_pvalue.pdf"),width = 2, height = 4)
   ggsave(paste0(FigDir,"score_",scorelevelname,"_vlnplot_Samplestage2_sig_pvalue.tiff"),width = 2, height = 4)
-  #    ggsave(paste0(FigDir,"score_",scorelevelname,"_vlnplot_Samplestage2_sig.pdf"),width = 2, height = 3)
-  #   ggsave(paste0(FigDir,"score_",scorelevelname,"_vlnplot_Samplestage2_sig.tiff"),width = 2, height = 3)
 }
 
 table(medatalong$SampleStage2)
